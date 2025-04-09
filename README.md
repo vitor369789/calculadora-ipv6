@@ -11,9 +11,23 @@ Uma aplicação web simples e eficiente para calcular e analisar endereços IPv6
 - Botões de cópia rápida para todos os valores
 - Interface responsiva e intuitiva
 
-## Opções de Instalação
+## Versões Disponíveis
 
-### 1. Instalação Automática
+### 1. Versão Portátil para Windows
+
+Uma versão executável que não requer instalação está disponível na pasta `portable-windows`.
+
+Para criar o executável:
+1. Entre na pasta `portable-windows`
+2. Execute `build.bat`
+3. O arquivo `Calculadora-IPv6.exe` será criado
+
+Para usar:
+1. Execute `Calculadora-IPv6.exe`
+2. Seu navegador abrirá automaticamente com a calculadora
+3. Para fechar, simplesmente feche a janela do terminal
+
+### 2. Instalação Automática
 
 #### Windows
 ```powershell
@@ -31,7 +45,7 @@ chmod +x install.sh
 sudo ./install.sh
 ```
 
-### 2. Docker
+### 3. Docker
 
 #### Configuração com Domínio e SSL (Recomendado para Produção)
 
@@ -95,7 +109,7 @@ docker logs -f calculadora-ipv6
 docker stop calculadora-ipv6
 ```
 
-### 3. Instalação Manual
+### 4. Instalação Manual
 
 #### Instalação
 ```bash
@@ -172,3 +186,4 @@ pm2 save
 - Docker (opcional)
 - Nginx (para produção com domínio)
 - Let's Encrypt (SSL)
+- PyInstaller (para versão portátil)
