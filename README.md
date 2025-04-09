@@ -25,10 +25,47 @@ docker-compose up -d
 
 ### Configuração SSL (Opcional)
 
-1. Configure seu domínio no arquivo `docker-compose.yml`
-2. Execute o script de inicialização SSL:
+1. Configure seu domínio:
+   - Aponte seu domínio para o IP do seu servidor
+   - Edite o arquivo `nginx.conf` e substitua `seu-dominio.com` pelo seu domínio real
+
+2. Configure o SSL:
+   ```bash
+   # Dê permissão de execução ao script
+   chmod +x init-ssl.sh
+   
+   # Execute o script
+   ./init-ssl.sh seu-dominio.com
+   ```
+
+### Comandos Docker Úteis
 ```bash
-./init-ssl.sh seu-dominio.com
+# Ver logs
+docker-compose logs -f
+
+# Reiniciar serviços
+docker-compose restart
+
+# Parar serviços
+docker-compose down
+```
+
+### Instalação Manual
+
+#### Windows
+```powershell
+# Execute o PowerShell como administrador e rode:
+Set-ExecutionPolicy Bypass -Scope Process -Force
+.\install.ps1
+```
+
+#### Linux
+```bash
+# Dê permissão de execução ao script
+chmod +x install.sh
+
+# Execute como root
+sudo ./install.sh
 ```
 
 ## Versão Portátil para Windows
@@ -53,6 +90,7 @@ Baixe o arquivo `Calculadora-IPv6.exe` da seção [Releases](https://github.com/
 - Divisão em blocos para melhor visualização
 - Cálculo de sub-redes
 - Botões para copiar endereços
+- Interface responsiva e intuitiva
 
 ## Desenvolvimento
 
@@ -65,6 +103,8 @@ calculadora-ipv6/
 ├── docker-compose.yml   # Configuração Docker
 ├── nginx.conf           # Configuração Nginx
 ├── init-ssl.sh         # Script para configuração SSL
+├── install.ps1         # Script de instalação Windows
+├── install.sh          # Script de instalação Linux
 └── portable-windows/   # Versão portátil para Windows
     ├── app.py
     ├── templates/
@@ -93,6 +133,46 @@ cd portable-windows
 # Windows (CMD)
 build.bat
 ```
+
+### Modo Produção com PM2
+
+1. Instale o PM2:
+```bash
+npm install -g pm2
+pm2 install pm2-python
+```
+
+2. Inicie a aplicação:
+```bash
+pm2 start ecosystem.config.js
+```
+
+3. Comandos úteis:
+```bash
+# Ver status
+pm2 status
+
+# Ver logs
+pm2 logs calculadora-ipv6
+
+# Reiniciar
+pm2 restart calculadora-ipv6
+
+# Configurar início automático
+pm2 startup
+pm2 save
+```
+
+## Tecnologias Utilizadas
+
+- Python 3.11+
+- Flask 1.1.4
+- HTML5/CSS3/JavaScript
+- Docker e Docker Compose
+- Nginx (para produção)
+- PM2 (para produção)
+- Let's Encrypt (SSL)
+- PyInstaller (versão portátil)
 
 ## Contribuindo
 
