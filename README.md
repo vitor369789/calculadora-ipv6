@@ -33,7 +33,42 @@ sudo ./install.sh
 
 ### 2. Docker
 
-#### Usando Docker Compose (Recomendado)
+#### Configuração com Domínio e SSL (Recomendado para Produção)
+
+1. Configure seu domínio:
+   - Aponte seu domínio para o IP do seu servidor
+   - Edite o arquivo `nginx.conf` e substitua `seu-dominio.com` pelo seu domínio real
+
+2. Configure o SSL:
+   ```bash
+   # Dê permissão de execução ao script
+   chmod +x init-ssl.sh
+   
+   # Edite o script com seu domínio e email
+   nano init-ssl.sh
+   
+   # Execute o script
+   ./init-ssl.sh
+   ```
+
+3. Inicie os serviços:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. Comandos úteis:
+   ```bash
+   # Ver logs
+   docker-compose logs -f
+   
+   # Reiniciar serviços
+   docker-compose restart
+   
+   # Parar serviços
+   docker-compose down
+   ```
+
+#### Usando Docker Localmente
 ```bash
 # Construir e iniciar o container
 docker-compose up -d
@@ -51,7 +86,7 @@ docker-compose down
 docker build -t calculadora-ipv6 .
 
 # Executar o container
-docker run -d -p 5000:5000 --name calculadora-ipv6 calculadora-ipv6
+docker run -d -p 80:5000 --name calculadora-ipv6 calculadora-ipv6
 
 # Ver logs
 docker logs -f calculadora-ipv6
@@ -135,3 +170,5 @@ pm2 save
 - JavaScript
 - PM2 (para produção)
 - Docker (opcional)
+- Nginx (para produção com domínio)
+- Let's Encrypt (SSL)
