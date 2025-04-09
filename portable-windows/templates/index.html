@@ -3,243 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora IPv6 Portátil</title>
-    <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: #f0f2f5;
-            color: #333;
-            line-height: 1.5;
-            margin: 0;
-            padding: 16px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            color: #2563eb;
-            text-align: center;
-            margin: 0 0 20px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        input:focus {
-            border-color: #2563eb;
-            outline: none;
-        }
-
-        button {
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:hover {
-            background: #1d4ed8;
-        }
-
-        .error {
-            color: #dc2626;
-            background: #fee2e2;
-            padding: 12px;
-            border-radius: 4px;
-            margin: 16px 0;
-            display: none;
-        }
-
-        .result {
-            margin-top: 20px;
-            display: none;
-        }
-
-        .section {
-            background: #f8fafc;
-            padding: 16px;
-            border-radius: 4px;
-            margin: 16px 0;
-            border: 1px solid #e5e7eb;
-        }
-
-        .info-row {
-            display: flex;
-            margin: 8px 0;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .info-label {
-            font-weight: 500;
-            min-width: 160px;
-        }
-
-        .info-value {
-            font-family: monospace;
-            word-break: break-all;
-        }
-
-        .blocks {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .block {
-            background: #2563eb;
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        .subnet-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .subnet-item {
-            padding: 8px;
-            margin: 4px 0;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        .copy-btn {
-            background: transparent;
-            color: #2563eb;
-            border: 1px solid currentColor;
-            padding: 2px 8px;
-            font-size: 12px;
-            width: auto;
-        }
-
-        .copy-btn:hover {
-            background: #2563eb;
-            color: #fff;
-        }
-
-        @media (max-width: 600px) {
-            .info-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .info-label {
-                margin-bottom: 4px;
-            }
-        }
-    </style>
+    <title>Calculadora IPv6</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora IPv6 Portátil</h1>
+        <h1>Calculadora IPv6</h1>
+        
         <div class="form-group">
-            <label for="ipv6_address">Endereço IPv6 (com prefixo)</label>
-            <input type="text" id="ipv6_address" placeholder="Ex: 2001:db8::/32">
+            <label for="ipv6_address">Endereço IPv6 (com prefixo):</label>
+            <input type="text" id="ipv6_address" placeholder="Ex: 2001:db8::/32" required>
         </div>
+        
         <div class="form-group">
-            <label for="new_prefix">Novo Prefixo para Sub-redes (opcional)</label>
-            <input type="number" id="new_prefix" min="1" max="128" placeholder="Ex: 48">
+            <label for="new_prefix">Novo Prefixo para Subredes (opcional):</label>
+            <input type="text" id="new_prefix" placeholder="Ex: 48">
         </div>
+        
         <button onclick="calculateIPv6()">Calcular</button>
         
-        <div id="error" class="error"></div>
-        
-        <div id="result" class="result">
-            <div class="section">
-                <h3>Informações do Endereço</h3>
-                <div class="info-row">
-                    <span class="info-label">Endereço Completo:</span>
-                    <span class="info-value" id="full_address"></span>
-                    <button class="copy-btn" onclick="copy('full_address')">Copiar</button>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Rede:</span>
-                    <span class="info-value" id="network"></span>
-                    <button class="copy-btn" onclick="copy('network')">Copiar</button>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Comprimento do Prefixo:</span>
-                    <span class="info-value" id="prefix_length"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Endereço Comprimido:</span>
-                    <span class="info-value" id="compressed"></span>
-                    <button class="copy-btn" onclick="copy('compressed')">Copiar</button>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Total de Endereços:</span>
-                    <span class="info-value" id="total_addresses"></span>
-                </div>
+        <div id="result" class="result" style="display: none;">
+            <h3>Resultados:</h3>
+            
+            <div class="form-group">
+                <label>Endereço Completo:</label>
+                <div id="full_address"></div>
+                <button class="copy-button" onclick="copyToClipboard('full_address')">Copiar</button>
             </div>
             
-            <div class="section">
-                <h3>Blocos do Endereço</h3>
-                <div id="blocks" class="blocks"></div>
+            <div class="form-group">
+                <label>Rede:</label>
+                <div id="network"></div>
+                <button class="copy-button" onclick="copyToClipboard('network')">Copiar</button>
             </div>
-
-            <div id="subnets_section" class="section" style="display: none;">
-                <h3>Sub-redes</h3>
-                <div class="info-row">
-                    <span class="info-label">Quantidade de Sub-redes:</span>
-                    <span class="info-value" id="subnet_count"></span>
-                </div>
-                <div id="subnet_list" class="subnet-list"></div>
+            
+            <div class="form-group">
+                <label>Formato Comprimido:</label>
+                <div id="compressed"></div>
+                <button class="copy-button" onclick="copyToClipboard('compressed')">Copiar</button>
+            </div>
+            
+            <div class="form-group">
+                <label>Comprimento do Prefixo:</label>
+                <div id="prefix_length"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>Total de Endereços:</label>
+                <div id="total_addresses"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>Blocos:</label>
+                <div id="blocks"></div>
+            </div>
+            
+            <div id="subnets_container" style="display: none;">
+                <h3>Subredes:</h3>
+                <div id="subnet_count"></div>
+                <div id="subnets" class="subnets"></div>
             </div>
         </div>
+        
+        <div id="error" class="error" style="display: none;"></div>
     </div>
 
     <script>
-        function copy(id) {
-            const text = document.getElementById(id).textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = event.target;
-                btn.textContent = 'Copiado!';
-                setTimeout(() => btn.textContent = 'Copiar', 1000);
-            });
-        }
-
         function calculateIPv6() {
             const ipv6Address = document.getElementById('ipv6_address').value;
             const newPrefix = document.getElementById('new_prefix').value;
-            const resultDiv = document.getElementById('result');
-            const errorDiv = document.getElementById('error');
-            const subnetsSection = document.getElementById('subnets_section');
             
             const formData = new FormData();
             formData.append('ipv6_address', ipv6Address);
-            if (newPrefix) formData.append('new_prefix', newPrefix);
+            if (newPrefix) {
+                formData.append('new_prefix', newPrefix);
+            }
             
             fetch('/calculate', {
                 method: 'POST',
@@ -248,40 +86,81 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    errorDiv.style.display = 'none';
-                    resultDiv.style.display = 'block';
-                    
-                    ['full_address', 'network', 'prefix_length', 'compressed', 'total_addresses'].forEach(id => {
-                        document.getElementById(id).textContent = data.result[id];
-                    });
-                    
-                    const blocksDiv = document.getElementById('blocks');
-                    blocksDiv.innerHTML = data.result.blocks.map(block => 
-                        `<span class="block">${block}</span>`
-                    ).join('');
-
-                    if (data.result.subnets?.length) {
-                        subnetsSection.style.display = 'block';
-                        document.getElementById('subnet_count').textContent = data.result.subnet_count;
-                        
-                        document.getElementById('subnet_list').innerHTML = data.result.subnets.map((subnet, i) => 
-                            `<div class="subnet-item">${i + 1}. ${subnet}</div>`
-                        ).join('');
-                    } else {
-                        subnetsSection.style.display = 'none';
-                    }
+                    displayResult(data.result);
                 } else {
-                    errorDiv.style.display = 'block';
-                    errorDiv.textContent = data.error;
-                    resultDiv.style.display = 'none';
+                    displayError(data.error);
                 }
             })
             .catch(error => {
-                errorDiv.style.display = 'block';
-                errorDiv.textContent = 'Erro ao processar a requisição';
-                resultDiv.style.display = 'none';
+                displayError('Erro ao processar a requisição: ' + error);
             });
         }
+        
+        function displayResult(result) {
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            
+            document.getElementById('full_address').textContent = result.full_address;
+            document.getElementById('network').textContent = result.network;
+            document.getElementById('compressed').textContent = result.compressed;
+            document.getElementById('prefix_length').textContent = result.prefix_length;
+            document.getElementById('total_addresses').textContent = result.total_addresses;
+            
+            const blocksContainer = document.getElementById('blocks');
+            blocksContainer.innerHTML = '';
+            result.blocks.forEach(block => {
+                const span = document.createElement('span');
+                span.className = 'block';
+                span.textContent = block;
+                blocksContainer.appendChild(span);
+            });
+            
+            const subnetsContainer = document.getElementById('subnets_container');
+            if (result.subnets && result.subnets.length > 0) {
+                subnetsContainer.style.display = 'block';
+                document.getElementById('subnet_count').textContent = `Total de Subredes: ${result.subnet_count}`;
+                
+                const subnetsDiv = document.getElementById('subnets');
+                subnetsDiv.innerHTML = '';
+                result.subnets.forEach(subnet => {
+                    const div = document.createElement('div');
+                    div.className = 'subnet-item';
+                    div.textContent = subnet;
+                    subnetsDiv.appendChild(div);
+                });
+            } else {
+                subnetsContainer.style.display = 'none';
+            }
+        }
+        
+        function displayError(error) {
+            document.getElementById('result').style.display = 'none';
+            const errorDiv = document.getElementById('error');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = error;
+        }
+        
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copiado para a área de transferência!');
+            }).catch(err => {
+                console.error('Erro ao copiar: ', err);
+            });
+        }
+        
+        // Permitir pressionar Enter para calcular
+        document.getElementById('ipv6_address').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateIPv6();
+            }
+        });
+        
+        document.getElementById('new_prefix').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateIPv6();
+            }
+        });
     </script>
 </body>
 </html>

@@ -19,7 +19,11 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Virtual Environment
 venv/
+env/
+ENV/
 
 # Node
 node_modules/
@@ -27,11 +31,23 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# IDEs
+# IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+
+# Portable Windows Build
+portable-windows/build/
+portable-windows/dist/
+portable-windows/*.spec
+portable-windows/venv/
+
+# SSL
+ssl/
+*.pem
+*.key
+*.crt
 
 # Environment
 .env

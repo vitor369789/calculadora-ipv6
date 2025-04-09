@@ -1,2 +1,7 @@
-flask==2.0.1
+flask==1.1.4
+werkzeug==1.0.1
+jinja2==2.11.3
+itsdangerous==1.1.0
+click==7.1.2
+markupsafe==1.1.1
 pyinstaller==5.13.0

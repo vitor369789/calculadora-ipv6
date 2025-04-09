@@ -6,7 +6,19 @@ import sys
 import threading
 import time
 
-app = Flask(__name__)
+def resource_path(relative_path):
+    """ Obtém o caminho absoluto para recursos empacotados """
+    try:
+        # PyInstaller cria um temp folder e armazena o caminho em _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+# Configura o diretório de templates e static
+template_folder = resource_path('templates')
+static_folder = resource_path('static')
+app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
 def calculate_subnets(network, new_prefix):
     try:
@@ -63,22 +75,9 @@ def open_browser():
     time.sleep(1.5)
     webbrowser.open('http://127.0.0.1:5000')
 
-def resource_path(relative_path):
-    """ Obtém o caminho absoluto para recursos empacotados """
-    try:
-        # PyInstaller cria um temp folder e armazena o caminho em _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
-
 if __name__ == '__main__':
-    # Configura o diretório de templates para funcionar com PyInstaller
-    template_folder = resource_path('templates')
-    app = Flask(__name__, template_folder=template_folder)
-    
     # Inicia o navegador em uma thread separada
     threading.Thread(target=open_browser, daemon=True).start()
     
     # Inicia o servidor Flask
-    app.run(port=5000)
+    app.run(port=5000, threaded=True)

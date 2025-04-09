@@ -1,19 +1,28 @@
 # Criar ambiente virtual
 python -m venv venv
+
+# Ativar o ambiente virtual
 .\venv\Scripts\Activate.ps1
 
 # Instalar dependências
-pip install -r requirements.txt
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
 
-# Criar executável com PyInstaller
-pyinstaller --onefile --add-data "templates;templates" --name "Calculadora-IPv6" app.py
+# Criar o executável
+.\venv\Scripts\python.exe -m PyInstaller --onefile --add-data "templates;templates" --add-data "static;static" --name "Calculadora-IPv6" app.py
 
 # Limpar arquivos temporários
-Remove-Item -Recurse -Force build
-Remove-Item -Force "Calculadora-IPv6.spec"
+if (Test-Path "build") {
+    Remove-Item -Recurse -Force build
+}
 
-# Mover o executável para a pasta atual
+if (Test-Path "Calculadora-IPv6.spec") {
+    Remove-Item -Force "Calculadora-IPv6.spec"
+}
+
+# Mover o executável para o diretório atual
 Move-Item -Force "dist\Calculadora-IPv6.exe" "."
+
+# Remover diretório dist
 Remove-Item -Recurse -Force dist
 
 # Criar arquivo README
